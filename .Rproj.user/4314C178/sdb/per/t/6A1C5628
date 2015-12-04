@@ -1,0 +1,17 @@
+{
+    "contents" : "Package: preReport\nType: Package\nTitle: Create a Data Report before Modeling\nVersion: 0.1\nDate: 2015-12-04\nAuthor:  \"Dawei Lang <dawei.lang@supstat.com> [aut, cre]\"\nDescription: This package will create a html report to show the quality of data\n    before modeling. Including NA, class, distribution,...\nLicense: MIT + file LICENSE\nLazyData: TRUE\nDepends:R ( >= 3.1.0)\nImports:\n    knitr,\n    ggplot2,\nSuggests:\n    recharts,\n    corrplot",
+    "created" : 1449194188910.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3581887355",
+    "id" : "6A1C5628",
+    "lastKnownWriteTime" : 1449194701,
+    "path" : "E:/git/preReport/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "dcf"
+}

@@ -1,0 +1,17 @@
+Package: preReport
+Type: Package
+Title: Create a Data Report before Modeling
+Version: 0.1
+Date: 2015-12-04
+Author:  "Dawei Lang <dawei.lang@supstat.com> [aut, cre]"
+Description: This package will create a html report to show the quality of data
+    before modeling. Including NA, class, distribution,...
+License: MIT + file LICENSE
+LazyData: TRUE
+Depends:R ( >= 3.1.0)
+Imports:
+    knitr,
+    ggplot2,
+Suggests:
+    recharts,
+    corrplot
