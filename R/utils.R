@@ -9,7 +9,7 @@ dataFrameCheck = function(inputData){
         stop("inputData is not a data frame!")
     }
 
-    if(dim(inputData) < 2){
+    if(dim(inputData)[1] < 2){
         warning("Ther is only one row in the data frame! ")
     }
 
@@ -48,3 +48,11 @@ vectorCheck = function(vector,
 # vectorCheck(iris,name = "Range")
 #
 # vectorCheck(1:10/10,lengthVector = 3,name = "Range")
+
+# Getname
+
+returnName = function(a){
+  cc = as.character(substitute(a))
+  cc
+}
+# all.equal("iris", returnName(iris))
