@@ -1,0 +1,57 @@
+---
+title: "Data Report of input"
+date: "sys.date()"
+output: html_document
+---
+
+## Overall
+
+```{r }
+input = iris
+data = input
+```
+
+The data including `r dim(data)[1]` rows and `r dim(data)[2]` columns.
+
+
+```{r}
+# number = 1:dim(data)[2]
+features = names(data)
+class = sapply(data,class)
+NAs = sapply(data,function(x) sum(is.na(x)))
+
+outData = data.frame(features,
+                     class,
+                     NAs)
+row.names(outData) = as.character(1:dim(data)[2])
+## TODO: Consider Change Names here
+###
+###
+
+
+knitr::kable(outData, row.names=T)
+```
+
+
+### NAs
+
+```{r}
+NAs = sapply(data,function(x) sum(is.na(x)))
+naRate = NAs / dim(data)[2]
+if(all(naRate == 0)){
+    htmltools::h4("There's no NA in this data.frame")
+}
+```
+
+
+```{r}
+NAs = sapply(data,function(x) sum(is.na(x)))
+naRate = NAs / dim(data)[2]
+if(any(naRate>0.2 & naRate < 0.5)){
+     htmltools::h4("These variables including 20% ~ 50% NAs:")
+     index = which(naRate>0.2 & naRate < 0.5)
+     htmltools::
+}
+    
+```
+

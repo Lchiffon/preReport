@@ -12,7 +12,6 @@
 ##'  Variables with NA proportion less than range[1] will do nothing,
 ##'  Variables with NA proportion more than range[2] will be suggested to delete.
 ##'  Others will be suggested to remove the observations.
-##' @author Chiffon <\url{http://chiffon.gitcafe.io}>
 ##' @examples
 ##' naReport(testData)
 
@@ -42,19 +41,23 @@ naReport = function(inputData,
 
 
     if(all(naPor <= range[1])){
+        # na[[1]]
+        # "There's no NA in any variables!"
       output$noNA = ("There's no NA in any variables!")
     }
 
     if(any(naPor >= range[2])){
       output$Delete = list(
+          # na[[2]]
+          # "There are more than %s%% NAs in these variables:"
         sprintf("There are more than %s%% NAs in these variables:",
           round(range[2]*100)),
         paste0(names(inputData)[which(naPor >= range[2])],
           collapse=", "),
-        sprintf("Use the following codes to delete them:
-nas = sapply(%s, function(x) sum(is.na(x)))
-naPor = nas / dim(%s)[1]
-%s_new = %s[,-which(naPor >= %s)]",
+          # na[[3]]
+          # "Use the following codes to delete them:"
+          "Use the following codes to delete them:",
+        sprintf("nas = sapply(%s, function(x) sum(is.na(x)))/nnaPor = nas / dim(%s)[1]/n%s_new = %s[,-which(naPor >= %s)]",
                               datName,
                               datName,
                               datName,
@@ -64,10 +67,14 @@ naPor = nas / dim(%s)[1]
 
     if(any(naPor > range[1] & naPor<range[2])){
       output$Replace = list(
+          # na[[5]]
+          # "These variables including  %s%% to %s%% NAs:"
           sprintf("These variables including  %s%% to %s%% NAs:",
               round(range[1]*100),round(range[2]*100)),
            paste0(names(inputData)[which(naPor > range[1] & naPor<range[2])],
               collapse=", "),
+           # na[[6]]
+           # "Use the following codes to remove the observations:"
            "Use the following codes to remove the observations:",
           sprintf("%s_new = na.omit(%s_new)", datName, datName)
 #            sprintf("
