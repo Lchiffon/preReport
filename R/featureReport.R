@@ -15,28 +15,58 @@
 ##' @examples
 ##' naReport(testData)
 
-featureReport = function(vector, vecName){
+featureReport = function(vector, vecName, ...){
 
     if(!is.vector(vector)){
         stop("Input should be a vector!")
     }
-    feaClass = class(vector)
-    feaLength = length(vector)
 
     if(missing(vecName)){
         vecName = "Current Variable"
     }
 
-    if(is.numeric(vector)){
-        output = featureReportNum(vector)
-    }
-
-    if(is.character(vector)){
-        output = featureReportChar(vector)
-    }
-
-    if(is.factor(vector)){
-        output = featureReportChar(vector)
-    }
+    UseMethod(vector, vecName, ...)
 
 }
+
+
+# numeric
+featureReport.numeric = function(vector,vecName){
+    output = list()
+
+    if(length(unique(vector))<10){
+        output$table = list(
+            table(vector)
+            )
+    }else{
+        output$table = list(
+            table(cut(vector,quantile(vector,c(0,0.2,0.4,0.6,0.8,1))))
+            )
+    }
+
+    summary(vector)
+
+
+    output$
+}
+
+
+new1 = function(a) UseMethod(a)
+
+setMethod("new1","numeric", featureReport.numeric )
+setMethod("new1","character", featureReport.character)
+setMethod("new1","factor", featureReport.factor)
+setMethod("new1","Date", featureReport.Date)
+
+
+
+library(ggplot2)
+a = rnorm(1000)
+qplot(a,fill = factor(sample(1:5,1000,replace=T)),geom="histogram",y=..density..) + scale_fill_grey()+
+    geom_density()
+
+
+
+m <- ggplot2::ggplot(data.frame(a),ggplot2::aes(x=a)) +
+    ggplot2::geom_histogram(ggplot2::aes(y=..density..),color="white",fill="#1F78B4") +
+    ggplot2::geom_density(fill=NA, colour="black",size=1)
