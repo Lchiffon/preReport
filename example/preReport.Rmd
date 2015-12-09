@@ -4,11 +4,16 @@ date: "sys.date()"
 output: html_document
 ---
 
+```{r echo=F}
+library(knitr)
+opts_chunk$set(echo=F)
+```
 ## Overall
 
 ```{r }
-input = iris
-data = input
+# load("data/data.Rdata")
+library(preReport)
+data = iris
 ```
 
 The data including `r dim(data)[1]` rows and `r dim(data)[2]` columns.
@@ -36,22 +41,30 @@ knitr::kable(outData, row.names=T)
 ### NAs
 
 ```{r}
-NAs = sapply(data,function(x) sum(is.na(x)))
-naRate = NAs / dim(data)[2]
-if(all(naRate == 0)){
-    htmltools::h4("There's no NA in this data.frame")
-}
+naR = naReport(data)
+knitrNa(naR)
 ```
+
+### Unique observations
 
 
 ```{r}
-NAs = sapply(data,function(x) sum(is.na(x)))
-naRate = NAs / dim(data)[2]
-if(any(naRate>0.2 & naRate < 0.5)){
-     htmltools::h4("These variables including 20% ~ 50% NAs:")
-     index = which(naRate>0.2 & naRate < 0.5)
-     htmltools::
-}
-    
+uniqR = uniqueReport(data)
+knitrUniq(uniqR)
 ```
+
+
+## Variable Report
+
+---
+### Report of Variable, %s
+
+```{r}
+a = featureReport(data[,1], '%s')
+kable(as.data.frame(a$table), row.names = T)
+kable(as.data.frame(a$summary), row.names = T)
+print(a$plot)
+```
+
+
 
