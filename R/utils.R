@@ -56,3 +56,16 @@ returnName = function(a){
   cc
 }
 # all.equal("iris", returnName(iris))
+
+naNum = function(vec){
+    sum(is.na(vec))
+}
+# naNum(rep(c(NA,1),5))
+
+tableProb = function(vec){
+    Count = table(vec, useNA="always")
+    Prob = round(Count / length(vec) * 100)
+    Prob = paste0(Prob, "%")
+    output = as.data.frame(rbind(Count, Prob))
+    output
+}

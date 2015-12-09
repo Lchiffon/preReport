@@ -38,9 +38,9 @@ uniqueReport =  function(inputData, naRange = c(0, 0.4)){
     if(n == uniqN){
         # unique[[1]]
         # "There's no repeat data in original data frame."
-      output$unique = list("There's no repeat data in original data frame.")
+      output$unique1 = list("There's no repeat data in original data frame.")
     }else{
-        output$unique = list(
+        output$unique2 = list(
         #  unique[[2]]
         #  "There are %s%%(%s/%s) repeat observations in the original data frame"
                 sprintf("There are %s%%(%s/%s) repeat observations in the original data frame",
@@ -57,9 +57,9 @@ uniqueReport =  function(inputData, naRange = c(0, 0.4)){
     if(n1 == uniqN1){
         # unique[[4]]
         # "There's no repeat data in the data frame after removing NA variables."
-      output$unique2 = list("There's no repeat data in the data frame after removing NA variables.")
+      output$unique3 = list("There's no repeat data in the data frame after removing NA variables.")
     }else{
-        output$unique2 = list(
+        output$unique4 = list(
         # unique[[5]]
         # "There are %s%%(%s/%s) repeat observations in the data frame after removing NA variables."
             sprintf("There are %s%%(%s/%s) repeat observations in the data frame after removing NA variables.",
@@ -69,9 +69,9 @@ uniqueReport =  function(inputData, naRange = c(0, 0.4)){
         # unique[[6]]
         # "Use the following codes to replace them:"
             "Use the following codes to replace them:",
-            sprintf("%s_new = naProcess(%s)/n%s_new = unique(%s_new)",
-             datName,
-             datName,
+            sprintf("%s_new = naProcess(%s)", datName,
+                    datName),
+            sprintf("%s_new = unique(%s_new)",
              datName,
              datName)
             )

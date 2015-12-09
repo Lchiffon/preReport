@@ -57,9 +57,9 @@ naReport = function(inputData,
           # na[[3]]
           # "Use the following codes to delete them:"
           "Use the following codes to delete them:",
-        sprintf("nas = sapply(%s, function(x) sum(is.na(x)))/nnaPor = nas / dim(%s)[1]/n%s_new = %s[,-which(naPor >= %s)]",
-                              datName,
-                              datName,
+        sprintf("nas = sapply(%s, function(x) sum(is.na(x)))", datName),
+        sprintf("naPor = nas / dim(%s)[1]", datName),
+        sprintf("%s_new = %s[, - which(naPor >= %s)]",
                               datName,
                               datName,
                               range[2]))

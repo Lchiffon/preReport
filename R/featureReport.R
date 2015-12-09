@@ -25,48 +25,109 @@ featureReport = function(vector, vecName, ...){
         vecName = "Current Variable"
     }
 
-    UseMethod(vector, vecName, ...)
+    UseMethod("featureReport")
 
 }
 
 
 # numeric
-featureReport.numeric = function(vector,vecName){
+featureReport.numeric = function(vector, vecName){
+    if(missing(vecName)){
+        vecName = "Current Variable"
+    }
+
+    # Initialize the output object
     output = list()
 
     if(length(unique(vector))<10){
         output$table = list(
-            table(vector)
+            tableProb(vector)
             )
     }else{
         output$table = list(
-            table(cut(vector,quantile(vector,c(0,0.2,0.4,0.6,0.8,1))))
+            tableProb(cut(vector,quantile(vector,c(0,0.2,0.4,0.6,0.8,1))))
             )
     }
 
-    summary(vector)
+    output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
+        ggplot2::geom_histogram(ggplot2::aes(y=..density..),color="white",fill="#1F78B4") +
+        ggplot2::geom_density(fill=NA, colour="black",size=1) +
+        ggplot2::ggtitle(sprintf("Histogram of %s",vecName)) +
+        ggplot2::xlab("Value")
+
+    output$summary = cbind(names(summary(vector)),
+                                                as.vector(summary(vector)))
+    output$summary  = as.data.frame(output$summary)
+    names(output$summary) = c("Name","Value")
 
 
-    output$
+    output
 }
 
+## featureReport.numeric(iris[,1], names(iris)[1])
 
-new1 = function(a) UseMethod(a)
+# character
+featureReport.character = function(vector, vecName){
+    if(missing(vecName)){
+        vecName = "Current Variable"
+    }
 
-setMethod("new1","numeric", featureReport.numeric )
-setMethod("new1","character", featureReport.character)
-setMethod("new1","factor", featureReport.factor)
-setMethod("new1","Date", featureReport.Date)
+    # Initialize the output object
+    output = list()
+
+     ## try numeric
+     if(naNum(vector) == naNum(as.numeric(vector))){
+         output = featureReport.numeric(as.numeric(vector), vecName)
+         output$Info = list("This variable may be a numeric variable")
+         return(output)
+     }
+
+     ## TODO: Try Date
+
+     ## character
+     if(length(unique(vector))<10){
+         output$table = list(
+             tableProb(vector)
+             )
+     }else{
+         tab = tableProb(vector)
+         otherCount = sum(vector %in% names(sort(tab[1,], decreasing = T)[1:10]))
+         otherProb = paste0(round(otherCount / length(vector) * 100,1),"%")
+         tab = tab[,order(tab[1,], decreasing = T)[1:10]]
+         tab$others = c(otherCount, otherProb)
+         output$table = list(
+             sprintf("%s has over 10 different values.",vecName),
+             tab
+             )
+     }
+
+     output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
+                                ggplot2::geom_bar(color="white",fill="#1F78B4") +
+                                ggplot2::ggtitle(sprintf("Bar plot of %s",vecName)) +
+                                ggplot2::xlab("Value")
 
 
-
-library(ggplot2)
-a = rnorm(1000)
-qplot(a,fill = factor(sample(1:5,1000,replace=T)),geom="histogram",y=..density..) + scale_fill_grey()+
-    geom_density()
+    #  output$summary = summary(vector)
 
 
+     output
+}
 
-m <- ggplot2::ggplot(data.frame(a),ggplot2::aes(x=a)) +
-    ggplot2::geom_histogram(ggplot2::aes(y=..density..),color="white",fill="#1F78B4") +
-    ggplot2::geom_density(fill=NA, colour="black",size=1)
+# factor
+featureReport.factor = function(vector, vecName){
+    if(missing(vecName)){
+        vecName = "Current Variable"
+    }
+
+    # Initialize the output object
+    output = list()
+
+    output = featureReport.character(as.character(vector), vecName)
+
+    output
+}
+
+setMethod("featureReport","numeric", featureReport.numeric )
+setMethod("featureReport","character", featureReport.character)
+setMethod("featureReport","factor", featureReport.factor)
+# setMethod("featureReport","Date", featureReport.Date)
