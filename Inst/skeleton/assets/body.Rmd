@@ -1,6 +1,6 @@
 ---
-title: "Data Report of input"
-date: "sys.date()"
+title: "Data Report of %s"
+date: "%s"
 output: html_document
 ---
 
@@ -11,9 +11,8 @@ opts_chunk$set(echo=F, message = F, warning = F, fig.pos = "center")
 ## Overall
 
 ```{r }
-# load("data/data.Rdata")
 library(preReport)
-data = iris
+load("data/data.Rdata")
 ```
 
 The data including `r dim(data)[1]` rows and `r dim(data)[2]` columns.
@@ -55,31 +54,3 @@ knitrUniq(uniqR)
 
 
 ## Variable Report
-
----
-
-### Report of Variable: %s
-
-```{r results="asis"}
-
-feaReport = featureReport(data[,1], '%s')
-knitrFeature(feaReport)
-
-```
-
-
-
-
----
-
-### Report of Variable: %s
-```{r results="asis"}
-
-feaReport = featureReport(data[,5], '%s')
-knitrFeature(feaReport)
-
-```
-
-
-
-

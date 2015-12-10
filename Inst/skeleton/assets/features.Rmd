@@ -1,0 +1,10 @@
+
+---
+
+### Report of Variable: %s
+
+```{r results="asis"}
+feaReport = featureReport(data[,%s], '%s')
+knitrFeature(feaReport)
+```
+

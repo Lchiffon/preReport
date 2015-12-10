@@ -39,14 +39,27 @@ featureReport.numeric = function(vector, vecName){
     # Initialize the output object
     output = list()
 
+    if(grepl("id",tolower(vecName))){
+        output = featureReport.character(as.character(vector), vecName)
+        output$Info = list("This variable may be a character variable!")
+        return(output)
+    }
+
     if(length(unique(vector))<10){
         output$table = list(
             tableProb(vector)
             )
     }else{
         output$table = list(
-            tableProb(cut(vector,quantile(vector,c(0,0.2,0.4,0.6,0.8,1))))
+            tableProb(cut(vector, unique(quantile(vector, c(0,0.25,0.5,0.75,1), na.rm = T)),
+                                include.lowest = T))
             )
+
+        # names(output$table[[1]]) = c( "Min_1stQu",
+        #                                                  "Qu_Median",
+        #                                                  "Median_3rdQu",
+        #                                                  "Qu_Max",
+        #                                                  "Na")
     }
 
     output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
@@ -60,6 +73,7 @@ featureReport.numeric = function(vector, vecName){
     output$summary  = as.data.frame(output$summary)
     names(output$summary) = c("Name","Value")
 
+    output$class = "numeric"
 
     output
 }
@@ -76,7 +90,7 @@ featureReport.character = function(vector, vecName){
     output = list()
 
      ## try numeric
-     if(naNum(vector) == naNum(as.numeric(vector))){
+     if(naNum(vector) == naNum(as.numeric(vector)) & !grepl("id",tolower(vecName))){
          output = featureReport.numeric(as.numeric(vector), vecName)
          output$Info = list("This variable may be a numeric variable")
          return(output)
@@ -86,19 +100,16 @@ featureReport.character = function(vector, vecName){
 
      ## character
      if(length(unique(vector))<10){
-         output$table = list(
-             tableProb(vector)
-             )
+         output$table = tableProb(vector)
      }else{
          tab = tableProb(vector)
          otherCount = sum(vector %in% names(sort(tab[1,], decreasing = T)[1:10]))
          otherProb = paste0(round(otherCount / length(vector) * 100,1),"%")
          tab = tab[,order(tab[1,], decreasing = T)[1:10]]
          tab$others = c(otherCount, otherProb)
-         output$table = list(
-             sprintf("%s has over 10 different values.",vecName),
-             tab
-             )
+         output$tableInfo = sprintf("%s has over 10 different values.",
+                                    vecName)
+         output$table = tab
      }
 
      output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
@@ -108,7 +119,7 @@ featureReport.character = function(vector, vecName){
 
 
     #  output$summary = summary(vector)
-
+    output$class = "character"
 
      output
 }

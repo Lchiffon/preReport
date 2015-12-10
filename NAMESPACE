@@ -1,2 +1,3 @@
 exportPattern("^[[:alpha:]]+")
+export(CountLines)
 import(htmltools)

@@ -69,3 +69,21 @@ tableProb = function(vec){
     output = as.data.frame(rbind(Count, Prob))
     output
 }
+
+CountLines = function(){
+    a = paste0("R/",dir("R"))
+    n = 0
+    for (file in a){
+        n = n + length(readLines(file))
+    }
+    n
+}
+
+
+copy_dir <- function(from, to){
+  if (!(file.exists(to))){
+    dir.create(to, recursive = TRUE)
+    message('Copying files to ', to, '...')
+    file.copy(list.files(from, full.names = T), to, recursive = TRUE)
+  }
+}
