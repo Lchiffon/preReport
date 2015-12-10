@@ -11,7 +11,7 @@ LazyData: TRUE
 Depends:R (>= 3.1.0)
 Imports:
     knitr (>= 1.11),
-    ggplot2 (>=1.0.1),
-    rmarkdown (>=0.7),
-    htmltools(>=0.2)
+    ggplot2 (>= 1.0.1),
+    rmarkdown (>= 0.7),
+    htmltools (>= 0.2)
 Suggests:
