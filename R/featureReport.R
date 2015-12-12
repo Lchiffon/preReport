@@ -1,19 +1,16 @@
-##' Create a naReport of a data.frame
+##' Create a Features Report of a Feature in the Data.frame
 ##'
-##' naReport will detect the NAs i around the variables in the
-##' dataframe and show the codes users may need for omit.
+##' featureReport will create a list of information of the feature
+##'
 ##'
 ##' @usage
-##' naReport(inputData,range = c(0, 0.4))
+##' featureReport(vector, vecName, ...)
 ##'
 ##'
-##' @param inputData   The data frame to create report before modeling.
-##' @param range   A vector of length 2 for the range of NA proportion.
-##'  Variables with NA proportion less than range[1] will do nothing,
-##'  Variables with NA proportion more than range[2] will be suggested to delete.
-##'  Others will be suggested to remove the observations.
+##' @param vector  A vector.
+##' @param vecName The Name of the vector.
 ##' @examples
-##' naReport(testData)
+##' featureReport(iris[,1])
 
 featureReport = function(vector, vecName, ...){
 
@@ -39,7 +36,7 @@ featureReport.numeric = function(vector, vecName){
     # Initialize the output object
     output = list()
 
-    if(grepl("id",tolower(vecName))){
+    if(endWithID(vecName)){
         output = featureReport.character(as.character(vector), vecName)
         output$Info = list("This variable may be a character variable!")
         return(output)
@@ -90,7 +87,7 @@ featureReport.character = function(vector, vecName){
     output = list()
 
      ## try numeric
-     if(naNum(vector) == naNum(as.numeric(vector)) & !grepl("id",tolower(vecName))){
+     if(naNum(vector) == naNum(as.numeric(vector)) & !endWithID(vecName)){
          output = featureReport.numeric(as.numeric(vector), vecName)
          output$Info = list("This variable may be a numeric variable")
          return(output)

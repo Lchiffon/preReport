@@ -1,3 +1,29 @@
+##' Create a preReport of a data.frame
+##'
+##' preReport will create a Rmd Report from a data.frame.
+##'
+##' @usage
+##' preReport(iris)
+##'
+##'preReport(inputData,
+##'          path,
+##'          scaffold = system.file("skeleton", package = "preReport"),
+##'          open_rmd = T,
+##'          useBytes = T, ...)
+##'
+##'
+##' @param inputData   The data frame to create report before modeling.
+##' @param path   A vector of length 2 for the range of NA proportion.
+##' @param scaffold Path for the file used in the html file.
+##' @param open_rmd Whether open the Rmd file or not.
+##' @param useBytes If useByte when writing the Rmd file.
+##' @param ... Other parameters put into writeLines function.
+##'
+##' @examples
+##' preReport(iris)
+
+
+
 preReport = function(inputData, path,
     scaffold = system.file("skeleton", package = "preReport"),
     open_rmd = T, useBytes = T, ...){

@@ -4,7 +4,7 @@ date: "%s"
 output: html_document
 ---
 
-```{r echo=F}
+```{r echo = F, warning = F}
 library(knitr)
 opts_chunk$set(echo=F, message = F, warning = F, fig.pos = "center")
 ```

@@ -1,3 +1,14 @@
+##' Function for Knitring Feature Report Function
+##'
+##' @usage
+##' knitrFeature(feaReport)
+##'
+##' @param feaReport  featureReport created by featureReport function.
+##'
+##' @examples
+##' feaReport = featureReport(iris[,1])
+##' knitrFeature(feaReport)
+
 knitrFeature = function(feaReport){
     if(feaReport$class == "numeric"){
         print(p(feaReport$Info))
