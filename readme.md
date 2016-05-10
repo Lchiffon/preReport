@@ -1,18 +1,23 @@
 
 
-## Crate a Data Report from preReport pacakge
-
-`preReport` is a R package creates data report before modeling which is useful for looking though the data.
-
-
-Install this package by:
-
-
 ```
-devtools::install.packages("lchiffon/preReport")
+devtools::install_github("lchiffon/preReport")
 library(preReport)
 preReport(iris)
 ```
-Here's a quick look to the report of Iris data.
 
-![pic](new.png)
+## TODO:
+
+###  Version  0.1
+- Raw report
+
+### Version 0.2
+- Raw report with CSS
+- HTML report
+
+### Version 0.3
+- HTML report with Echarts!
+- Word report
+
+### Vertion 0.4
+- Other features

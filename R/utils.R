@@ -87,9 +87,3 @@ copy_dir <- function(from, to){
     file.copy(list.files(from, full.names = T), to, recursive = TRUE)
   }
 }
-
-endWithID = function(vecName){
-  n = nchar(vecName)
-  judge = substr(vecName,n-1,n)
-  "id" == tolower(judge)
-}

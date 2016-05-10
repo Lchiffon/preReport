@@ -1,6 +1,7 @@
 ##' Create a uniqueReport of a data.frame
 ##'
-##' uniqueReport will create a unique Report from a data.frame.
+##' naReport will detect the NAs i around the variables in the
+##' dataframe and show the codes users may need for omit.
 ##'
 ##' @usage
 ##' uniqueReport (inputData,range = c(0, 0.4))
@@ -12,7 +13,7 @@
 ##'  Variables with NA proportion more than range[2] will be suggested to delete.
 ##'  Others will be suggested to remove the observations.
 ##' @examples
-##' uniqueReport(testData)
+##' naReport(testData)
 
 
 

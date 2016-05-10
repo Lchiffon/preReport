@@ -1,32 +1,6 @@
-##' Create a preReport of a data.frame
-##'
-##' preReport will create a Rmd Report from a data.frame.
-##'
-##' @usage
-##' preReport(iris)
-##'
-##'preReport(inputData,
-##'          path,
-##'          scaffold = system.file("skeleton", package = "preReport"),
-##'          open_rmd = T,
-##'          useBytes = T, ...)
-##'
-##'
-##' @param inputData   The data frame to create report before modeling.
-##' @param path   A vector of length 2 for the range of NA proportion.
-##' @param scaffold Path for the file used in the html file.
-##' @param open_rmd Whether open the Rmd file or not.
-##' @param useBytes If useByte when writing the Rmd file.
-##' @param ... Other parameters put into writeLines function.
-##'
-##' @examples
-##' preReport(iris)
-
-
-
 preReport = function(inputData, path,
     scaffold = system.file("skeleton", package = "preReport"),
-    open_rmd = T, useBytes = T, ...){
+    open_rmd = T, useBytes = T, target = NULL, ...){
 
     if(missing(inputData)){
         stop("You should input a data.frame.")
@@ -40,11 +14,15 @@ preReport = function(inputData, path,
         path = "Current"
     }
 
+    if(!is.null(target)){
+        if(!target %in% names(inputData))
+            target = NULL
+    }
 
-    message("Creating slide directory at ", path, "...")
+    message("Creating report directory at ", path, "...")
     copy_dir(scaffold, path)
-    message("Finished creating slide directory...")
-    message("Switching to slide directory...")
+    message("Finished creating report directory...")
+    message("Switching to report directory...")
     setwd(path)
 
     data = inputData
@@ -53,18 +31,34 @@ preReport = function(inputData, path,
     body[2] = sprintf(body[2], datName)
     body[3] = sprintf(body[3], Sys.Date())
 
-    featureLayout = readLines("assets/features.Rmd", ...)
+    if(is.null(target)){
+        featureLayout = readLines("assets/features.Rmd", ...)
+    }else{
+        featureLayout = readLines("assets/featuresWithTarget.Rmd", ...)
+        j = which(names(inputData)==target)
+    }
+
     featureIndex = which(grepl("%s", featureLayout))
     featureOutput = c()
 
 
     ## Create dirction
-    for( i in 1:(dim(data)[2])){
-        feature = featureLayout
-        feature[[featureIndex[1]]] = sprintf(feature[[featureIndex[1]]], names(data)[i])
-        feature[[featureIndex[2]]] = sprintf(feature[[featureIndex[2]]], i, names(data)[i])
-        featureOutput = c(featureOutput, feature)
+    if(is.null(target)){
+        for( i in 1:(dim(data)[2])){
+            feature = featureLayout
+            feature[[featureIndex[1]]] = sprintf(feature[[featureIndex[1]]], names(data)[i])
+            feature[[featureIndex[2]]] = sprintf(feature[[featureIndex[2]]], i, names(data)[i])
+            featureOutput = c(featureOutput, feature)
+        }
+    }else{
+        for( i in 1:(dim(data)[2])){
+            feature = featureLayout
+            feature[[featureIndex[1]]] = sprintf(feature[[featureIndex[1]]], names(data)[i])
+            feature[[featureIndex[2]]] = sprintf(feature[[featureIndex[2]]], i, names(data)[i], j)
+            featureOutput = c(featureOutput, feature)
+        }
     }
+
 
     out = c(body, featureOutput)
     ## Write Files

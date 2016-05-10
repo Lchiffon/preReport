@@ -1,18 +1,21 @@
-##' Create a Features Report of a Feature in the Data.frame
+##' Create a naReport of a data.frame
 ##'
-##' featureReport will create a list of information of the feature
-##'
+##' naReport will detect the NAs i around the variables in the
+##' dataframe and show the codes users may need for omit.
 ##'
 ##' @usage
-##' featureReport(vector, vecName, ...)
+##' naReport(inputData,range = c(0, 0.4))
 ##'
 ##'
-##' @param vector  A vector.
-##' @param vecName The Name of the vector.
+##' @param inputData   The data frame to create report before modeling.
+##' @param range   A vector of length 2 for the range of NA proportion.
+##'  Variables with NA proportion less than range[1] will do nothing,
+##'  Variables with NA proportion more than range[2] will be suggested to delete.
+##'  Others will be suggested to remove the observations.
 ##' @examples
-##' featureReport(iris[,1])
+##' naReport(testData)
 
-featureReport = function(vector, vecName, ...){
+featureReport = function(vector, vecName, target = NULL, ...){
 
     if(!is.vector(vector)){
         stop("Input should be a vector!")
@@ -28,19 +31,21 @@ featureReport = function(vector, vecName, ...){
 
 
 # numeric
-featureReport.numeric = function(vector, vecName){
+featureReport.numeric = function(vector, vecName, target = NULL){
     if(missing(vecName)){
         vecName = "Current Variable"
     }
 
+
+
     # Initialize the output object
     output = list()
 
-    if(endWithID(vecName)){
-        output = featureReport.character(as.character(vector), vecName)
-        output$Info = list("This variable may be a character variable!")
-        return(output)
-    }
+#     if(grepl("id",tolower(vecName))){
+#         output = featureReport.character(as.character(vector), vecName,target)
+#         output$Info = list("This variable may be a character variable!")
+#         return(output)
+#     }
 
     if(length(unique(vector))<10){
         output$table = list(
@@ -59,11 +64,21 @@ featureReport.numeric = function(vector, vecName){
         #                                                  "Na")
     }
 
-    output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
-        ggplot2::geom_histogram(ggplot2::aes(y=..density..),color="white",fill="#1F78B4") +
-        ggplot2::geom_density(fill=NA, colour="black",size=1) +
-        ggplot2::ggtitle(sprintf("Histogram of %s",vecName)) +
-        ggplot2::xlab("Value")
+    if(is.null(target)){
+        output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
+            ggplot2::geom_histogram(ggplot2::aes(y=..density..),color="white",fill="#1F78B4") +
+            ggplot2::geom_density(fill=NA, colour="black",size=1) +
+            ggplot2::ggtitle(sprintf("Histogram of %s",vecName)) +
+            ggplot2::xlab("Value")
+    }else{
+
+        output$plot = ggplot2::ggplot(data.frame(vector,target),ggplot2::aes(x=vector,fill=target)) +
+            ggplot2::geom_histogram(color="white") +
+            # ggplot2::geom_density(fill=NA, colour="black",size=1) +
+            ggplot2::ggtitle(sprintf("Histogram of %s",vecName)) +
+            ggplot2::xlab("Value")
+    }
+
 
     output$summary = cbind(names(summary(vector)),
                                                 as.vector(summary(vector)))
@@ -78,7 +93,7 @@ featureReport.numeric = function(vector, vecName){
 ## featureReport.numeric(iris[,1], names(iris)[1])
 
 # character
-featureReport.character = function(vector, vecName){
+featureReport.character = function(vector, vecName, target = NULL){
     if(missing(vecName)){
         vecName = "Current Variable"
     }
@@ -87,7 +102,7 @@ featureReport.character = function(vector, vecName){
     output = list()
 
      ## try numeric
-     if(naNum(vector) == naNum(as.numeric(vector)) & !endWithID(vecName)){
+     if(naNum(vector) == naNum(as.numeric(vector)) & !grepl("id",tolower(vecName))){
          output = featureReport.numeric(as.numeric(vector), vecName)
          output$Info = list("This variable may be a numeric variable")
          return(output)
@@ -109,11 +124,18 @@ featureReport.character = function(vector, vecName){
          output$table = tab
      }
 
-     output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
+    if(is.null(target)){
+        output$plot =  ggplot2::ggplot(data.frame(vector),ggplot2::aes(x=vector)) +
                                 ggplot2::geom_bar(color="white",fill="#1F78B4") +
                                 ggplot2::ggtitle(sprintf("Bar plot of %s",vecName)) +
                                 ggplot2::xlab("Value")
-
+    }else{
+        output$plot =  ggplot2::ggplot(data.frame(vector,target),
+                                       ggplot2::aes(x=vector, fill = target)) +
+            ggplot2::geom_bar(color="white") +
+            ggplot2::ggtitle(sprintf("Bar plot of %s",vecName)) +
+            ggplot2::xlab("Value")
+    }
 
     #  output$summary = summary(vector)
     output$class = "character"

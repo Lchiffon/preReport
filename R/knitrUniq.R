@@ -1,14 +1,3 @@
-##' Function for Knitring Unique Report Function
-##'
-##' @usage
-##' knitrUniq(uniqR)
-##'
-##' @param uniqR  uniqReport created by uniqueReport function.
-##'
-##' @examples
-##' report = uniqueReport(testData)
-##' knitrUniq(report)
-
 knitrUniq = function(uniqR){
     if(is.null(uniqR$unique2)){
         div1 = tagList(p(strong(uniqR$unique1[[1]]))

@@ -1,14 +1,3 @@
-##' Function for Knitring NA Report Function
-##'
-##' @usage
-##' knitrNa(naR)
-##'
-##' @param naR  naReport created by naReport function.
-##'
-##' @examples
-##' report = naReport(testData)
-##' knitrNa(report)
-
 knitrNa = function(naR){
 
     if(is.null(naR$noNA)){
